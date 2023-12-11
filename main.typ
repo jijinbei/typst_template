@@ -4,7 +4,6 @@
   title: "シャルピー衝撃試験レポート",
   authors: (
     "伊豆大学1年 今村 耕平",
-    "伊豆大学1年 今村 耕平",
   ),
   date: true,
   titlepage: false,
