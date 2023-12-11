@@ -1,12 +1,13 @@
-#import "template.typ": project, cbox
+#import "template.typ": *
 
 #show: project.with(
   title: "シャルピー衝撃試験レポート",
   authors: (
     "伊豆大学1年 今村 耕平",
+    "伊豆大学1年 今村 耕平",
   ),
   date: true,
-  titlepage: true,
+  titlepage: false,
 )
 
 = 目的

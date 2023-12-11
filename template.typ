@@ -7,18 +7,32 @@
   titlepage: false,
   body
   ) = {
+
+  let body_font = (
+    "Latin Modern Roman",
+    "Harano Aji Mincho"
+  )
+
+  let math_font = ("Latin Modern Math")
+
   // Set the document's basic properties.
   set document(author: authors, title: title)
+  
   set page(
-    margin: (left: 25mm, right: 25mm, top: 30mm, bottom: 30mm),
+    margin: (
+      left: 25mm,
+      right: 25mm,
+      top: 30mm,
+      bottom: 30mm
+    ),
     numbering: "1",
     number-align: center,
   )
+  
   set text(
-    font: (
-      "Latin Modern Roman",
-      "Harano Aji Mincho",
-    )
+    font: body_font,
+    lang: "ja",
+    region: "JP"
   )
 
   set figure(supplement: it => {
@@ -32,12 +46,17 @@
   )
 
   // Spacing between Japanese and English text
-  show regex("[\\P{latin}&&[[:^ascii:]]][\\p{latin}[[:ascii:]]]|[\\p{latin}[[:ascii:]]][\\P{latin}&&[[:^ascii:]]]") : it => {
+  show regex(
+    "[\\P{latin}&&[[:^ascii:]]][\\p{latin}[[:ascii:]]]|[\\p{latin}[[:ascii:]]][\\P{latin}&&[[:^ascii:]]]"
+  ) : it => {
     let a = it.text.match(regex("(.)(.)"))
     a.captures.at(0)+h(0.25em)+a.captures.at(1)
   }
 
-  show math.equation: set text(weight: 400)
+  show math.equation: set text(
+    weight: 400,
+    font: math_font,
+    )
   set math.equation(
     numbering: "(1)",
     supplement: "式",
@@ -46,9 +65,11 @@
   let set_author = pad(
     top: 1em,
     bottom: 0em,
+    left: 4em,
+    right: 4em,
     grid(
-      columns: (1fr,) * calc.min(3, authors.len()),
-      gutter: 1em,
+      columns: (1fr,) * calc.min(2, authors.len()),
+      gutter: 1%,
       ..authors.map(author => 
       align(
         center, 
@@ -57,34 +78,33 @@
     ),
   )
 
-  let set_date = align(
-    center, 
-    text(
-      size: 1.1em, 
-      datetime.today().display("[year]年[month]月[day]日")
-  ))
-
-  // Set paragraph spacing.
-  show par: set block(above: 1.25em, below: 1.25em)
-
-  set heading(numbering: "1.1 ",)
-  set par(leading: 0.9em)
+  let set_date(date) = {
+    if date == true {
+      align(
+        center, 
+        text(
+          size: 1.2em, 
+          datetime.today().display("[year]年[month]月[day]日")
+        )
+      )
+    }
+  }
 
   // Start of document
   if titlepage == true {
     // Title
     v(0.3fr)
     align(center)[
-      #block(text(size: 2.25em, weight: 600, title))
+      #block(
+        text(size: 2.5em, weight: 600, title)
+      )
     ]
 
     // Author
     set_author
 
     // Date
-    if date == true {
-      set_date
-    }
+    set_date(date)
 
     v(0.7fr)
     
@@ -97,30 +117,31 @@
   } else { // if set_titlepage == false
     // Title
     align(center)[
-      #v(3.0em)
-      #block(text(size: 2em, weight: 600, title))
+      #block(
+        text(size: 2.0em, weight: 600, title)
+      )
     ]
 
-    // Author
     set_author
-
-    // Date
-    if date == true {
-      set_date
-    }
+    set_date(date)
 
     v(2em)
   }
 
-
-  // body
-  show par: set block(
-    spacing: 1em
-    )
   set par(
     // first-line-indent: 1em,
     justify: true,
+    leading: 0.9em
   )
+  // Set paragraph spacing.
+  // body
+  show par: set block(
+    above: 1.25em,
+    below: 1.25em,
+    spacing: 1em
+  )
+  
+  set heading(numbering: "1.1 ")
 
   body
 }
@@ -143,3 +164,10 @@
 )[
   #txt
 ]
+
+#let LaTeX = text(
+  font: "Latin Modern Roman", 
+  [
+    L#h(-0.35em)#text(size: 0.725em, baseline: -0.25em)[A]#h(-0.125em)T#h(-0.175em)#text(baseline: 0.225em)[E]#h(-0.125em)X
+  ]
+)
