@@ -62,38 +62,70 @@
     supplement: "式",
   )
 
-  let set_author = pad(
-    top: 1em,
-    bottom: 0em,
-    left: 4em,
-    right: 4em,
-    grid(
-      columns: (1fr,) * calc.min(2, authors.len()),
-      gutter: 1%,
-      ..authors.map(author => 
-      align(
-        center, 
-        text(size: 1.2em, author)
-      )),
-    ),
-  )
-
-  let set_date(date) = {
-    if date == true {
-      align(
-        center, 
-        text(
-          size: 1.2em, 
-          datetime.today().display("[year]年[month]月[day]日")
-        )
+  let set_author(ver) = {
+    if ver == 1 {
+      pad(
+        top: 1em,
+        bottom: 0em,
+        left: 4em,
+        right: 4em,
+        grid(
+          columns: (1fr,) * calc.min(2, authors.len()),
+          gutter: 1%,
+          ..authors.map(author => 
+          align(
+            center, 
+            text(size: 1.3em, author)
+          )),
+        ),
       )
+    } else if ver == 2 {
+      v(0.05fr)
+      pad(
+        top: 1em,
+        bottom: 0em,
+        left: 4em,
+        right: 4em,
+        grid(
+          columns: (1fr,) * calc.min(1, authors.len()),
+          gutter: 1%,
+          ..authors.map(author => 
+          align(
+            center, 
+            text(size: 1.5em, author)
+          )),
+        ),
+      )
+      v(0.05fr)
     }
+  }
+
+  let set_date(date, ver) = {
+    if date == true {
+      if ver == 1 {
+        align(
+          center, 
+          text(
+            size: 1.2em, 
+            datetime.today().display("[year]年[month]月[day]日")
+          )
+        )
+      } else if ver == 2 {
+        align(
+          center, 
+          text(
+            size: 1.4em, 
+            datetime.today().display("[year]年[month]月[day]日")
+          )
+        )
+      }
+    } 
   }
 
   // Start of document
   if titlepage == true {
     // Title
-    v(0.3fr)
+    v(0.4fr)
     align(center)[
       #block(
         text(size: 2.5em, weight: 600, title)
@@ -101,12 +133,12 @@
     ]
 
     // Author
-    set_author
+    set_author(2)
 
     // Date
-    set_date(date)
+    set_date(date, 2)
 
-    v(0.7fr)
+    v(0.6fr)
     
     pagebreak()
 
@@ -122,26 +154,43 @@
       )
     ]
 
-    set_author
-    set_date(date)
-
-    v(2em)
+    set_author(1)
+    set_date(date, 1)
   }
 
   set par(
     // first-line-indent: 1em,
     justify: true,
-    leading: 0.9em
+    leading: 0.95em,
   )
   // Set paragraph spacing.
   // body
   show par: set block(
     above: 1.25em,
-    below: 1.25em,
+    below: 1em,
     spacing: 1em
   )
   
+
+  // Set heading styles.
   set heading(numbering: "1.1 ")
+  show heading.where(level: 1): set text(
+    weight: 630,
+  )
+  show heading.where(level: 1): set block(
+    above: 2em,
+  )
+
+  show heading.where(level: 2): set text(
+    weight: 600,
+  )
+  show heading.where(level: 2): set block(
+    above: 1.25em,
+  )
+
+  show heading.where(level: 3): set text(
+    weight: 570,
+  )
 
   body
 }
