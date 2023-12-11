@@ -1,8 +1,10 @@
+#import "@preview/showybox:2.0.1": showybox
+
 #let project(
   title: "",
   authors: (),
-  set_date: false,
-  set_titlepage: false,
+  date: false,
+  titlepage: false,
   body
   ) = {
   // Set the document's basic properties.
@@ -41,6 +43,27 @@
     supplement: "式",
   )
 
+  let set_author = pad(
+    top: 1em,
+    bottom: 0em,
+    grid(
+      columns: (1fr,) * calc.min(3, authors.len()),
+      gutter: 1em,
+      ..authors.map(author => 
+      align(
+        center, 
+        text(size: 1.2em, author)
+      )),
+    ),
+  )
+
+  let set_date = align(
+    center, 
+    text(
+      size: 1.1em, 
+      datetime.today().display("[year]年[month]月[day]日")
+  ))
+
   // Set paragraph spacing.
   show par: set block(above: 1.25em, below: 1.25em)
 
@@ -48,7 +71,7 @@
   set par(leading: 0.9em)
 
   // Start of document
-  if set_titlepage == true {
+  if titlepage == true {
     // Title
     v(0.3fr)
     align(center)[
@@ -56,28 +79,11 @@
     ]
 
     // Author
-    pad(
-      top: 1em,
-      bottom: 0em,
-      grid(
-        columns: (1fr,) * calc.min(3, authors.len()),
-        gutter: 1em,
-        ..authors.map(author => 
-        align(
-          center, 
-          text(size: 1.2em, author)
-        )),
-      ),
-    )
+    set_author
 
     // Date
-    if set_date == true {
-      align(
-        center, 
-        text(
-          size: 1.1em, 
-          datetime.today().display("[year]年[month]月[day]日")
-      ))
+    if date == true {
+      set_date
     }
 
     v(0.7fr)
@@ -96,28 +102,11 @@
     ]
 
     // Author
-    pad(
-      top: 1em,
-      bottom: 0em,
-      grid(
-        columns: (1fr,) * calc.min(3, authors.len()),
-        gutter: 1em,
-        ..authors.map(author => 
-        align(
-          center, 
-          text(size: 1.2em, author)
-        )),
-      ),
-    )
+    set_author
 
     // Date
-    if set_date == true {
-      align(
-        center, 
-        text(
-          size: 1.1em, 
-          datetime.today().display("[year]年[month]月[day]日")
-      ))
+    if date == true {
+      set_date
     }
 
     v(2em)
@@ -136,3 +125,21 @@
   body
 }
 
+// box
+#let cbox(title,txt) = showybox(
+  title-style: (
+    weight: 800,
+    color: red.darken(15%),
+    sep-thickness: 0pt,
+    align: center
+  ),
+  frame: (
+    title-color: red.lighten(80%),
+    border-color: red.darken(30%),
+    thickness: (left: 1pt),
+    radius: 2pt
+  ),
+  title: title,
+)[
+  #txt
+]

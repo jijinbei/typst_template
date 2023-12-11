@@ -1,4 +1,0 @@
-- 外部ライブラリのtableのsupplement
-- footnoteのfontsize
-- 改行の際の間隔
-- 文章はじめの一文字開ける
