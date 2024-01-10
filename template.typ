@@ -247,25 +247,27 @@
     }
   }
 
-  let csv_labeled = ()
-  for csv_lab in csv_label {
-    csv_labeled = csv_labeled + (strong(csv_lab),)
-  }
-
+  let labeled = ()
   if label == none {
+    for csv_l in csv_label {
+      labeled = labeled + (strong(csv_l),)
+    }
     figure(
       table(
         columns: (1fr, ) * len,
-        ..csv_labeled,
+        ..labeled,
         ..csved,
       ),
       caption: caption,
     )
   } else {
+    for l in label {
+      labeled = labeled + (strong(l),)
+    }
     figure(
       table(
         columns: (1fr, ) * len,
-        ..label,
+        ..labeled,
         ..csved,
       ),
       caption: caption,
