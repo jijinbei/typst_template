@@ -217,6 +217,58 @@
 #let LaTeX = text(
   font: "Latin Modern Roman", 
   [
-    L#h(-0.35em)#text(size: 0.725em, baseline: -0.25em)[A]#h(-0.125em)T#h(-0.175em)#text(baseline: 0.225em)[E]#h(-0.125em)X
+    L#h(-0.35em)
+    #text(size: 0.725em, baseline: -0.25em)[A]#h(-0.125em)
+    T#h(-0.175em)
+    #text(baseline: 0.225em)[E]#h(-0.125em)
+    X
   ]
 )
+
+// convert csv to table
+//
+// #csv2table(csv("data/Pb_data.csv"), [鉛の厚みとエネルギースペクトルの関係], label: ("厚さ(cm)",$A$,$mu "(keV)"$,$sigma$,$I$))
+//
+#let csv2table(csv, caption, label: none, digits: 2) = {
+  let csv_label = csv.first()
+  let len = csv_label.len()
+
+  let csved =()
+  for row in csv.slice(1) {
+    for s in row {
+      if regex("\d+\.\d+") in s {
+        let n = float(s)
+        let round_n = calc.round(n, digits: digits)
+        let str_n = str(round_n)
+        csved = csved + (str_n,)
+      } else {
+        csved = csved + (s,)
+      }
+    }
+  }
+
+  let csv_labeled = ()
+  for csv_lab in csv_label {
+    csv_labeled = csv_labeled + (strong(csv_lab),)
+  }
+
+  if label == none {
+    figure(
+      table(
+        columns: (1fr, ) * len,
+        ..csv_labeled,
+        ..csved,
+      ),
+      caption: caption,
+    )
+  } else {
+    figure(
+      table(
+        columns: (1fr, ) * len,
+        ..label,
+        ..csved,
+      ),
+      caption: caption,
+    )
+  }
+}
