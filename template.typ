@@ -1,10 +1,58 @@
 #import "@preview/showybox:2.0.1": showybox
 
+#let custom_outline() = locate(loc => {
+  heading(numbering: none)[目次]
+  let headings = query(heading, loc)
+  let toc = ()
+
+  // remove the heading for the outline
+  let _ = headings.remove(0)
+
+  for h in headings {
+    let padd = h.level * 1em - 1em
+    let page = counter(page).at(h.location())
+    
+    let ch = if h.level == 1 {
+      strong(counter("h").display("1."))
+    } else {
+      counter("h").display("1.")
+    }
+    
+    let heading = if h.level == 1 {
+      strong(h.body)
+    } else {
+      h.body
+    }
+    
+    toc.push(
+      {
+        if h.level == 1 [
+          #v(1.2em)
+        ] else [
+          #v(0.7em)
+        ]
+      } + 
+      box[#pad(left: padd)[#link(h.location())[#{counter("h").step(level: h.level)}#ch#sym.space.third#heading]]] + 
+      " " +
+      box(width: 1fr)[
+        #if h.level != 1 [
+          #repeat(" .")
+        ]
+        ] + 
+      [ #page.join()]
+    )
+  }
+
+  stack(dir: ttb, ..toc)
+})
+
+
 #let project(
   title: "",
   authors: (),
   date: false,
   titlepage: false,
+  bibfile: "",
   body
   ) = {
 
@@ -41,7 +89,7 @@
   } else if it.func() == image {
     "図"
   } else {
-    "?" // どうしよ
+    "図" // どうしよ
   }}
   )
 
@@ -58,8 +106,8 @@
     font: math_font,
     )
   set math.equation(
-    numbering: "(1)",
     supplement: "式",
+    numbering: "(1)",
   )
 
   let set_author(ver) = {
@@ -143,7 +191,7 @@
     pagebreak()
 
     // Table of contents.
-    outline(depth: 3, indent: true)
+    custom_outline()
     pagebreak()
   
   } else { // if set_titlepage == false
@@ -189,10 +237,22 @@
   )
 
   show heading.where(level: 3): set text(
-    weight: 570,
+    weight: 600,
   )
 
+  // 改行時の行間を調整する
+  // show parbreak : {
+  // h(1em)
+  // } // バグが多いので使えない
+  // noindentの関数を作る
+
   body
+
+  
+  if bibfile != "" {
+    heading([参考文献])
+    bibliography(bibfile, title: none)
+  }
 }
 
 // box
@@ -217,16 +277,13 @@
 #let LaTeX = text(
   font: "Latin Modern Roman", 
   [
-    L#h(-0.35em)
-    #text(size: 0.725em, baseline: -0.25em)[A]#h(-0.125em)
-    T#h(-0.175em)
-    #text(baseline: 0.225em)[E]#h(-0.125em)
-    X
+    L#h(-0.35em)#text(size: 0.725em, baseline: -0.25em)[A]#h(-0.125em)T#h(-0.175em)#text(baseline: 0.225em)[E]#h(-0.125em)X
   ]
 )
 
 // convert csv to table
 //
+// example
 // #csv2table(csv("data/Pb_data.csv"), [鉛の厚みとエネルギースペクトルの関係], label: ("厚さ(cm)",$A$,$mu "(keV)"$,$sigma$,$I$))
 //
 #let csv2table(csv, caption, label: none, digits: 2) = {
@@ -274,3 +331,30 @@
     )
   }
 }
+
+
+// box
+#let cbox(title,txt) = showybox(
+  title-style: (
+    weight: 800,
+    color: red.darken(15%),
+    sep-thickness: 0pt,
+    align: center
+  ),
+  frame: (
+    title-color: red.lighten(80%),
+    border-color: red.darken(30%),
+    thickness: (left: 1pt),
+    radius: 2pt
+  ),
+  title: title,
+)[
+  #txt
+]
+
+#let LaTeX = text(
+  font: "Latin Modern Roman", 
+  [
+    L#h(-0.35em)#text(size: 0.725em, baseline: -0.25em)[A]#h(-0.125em)T#h(-0.175em)#text(baseline: 0.225em)[E]#h(-0.125em)X
+  ]
+)

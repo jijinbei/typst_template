@@ -7,7 +7,7 @@
     "伊豆大学1年 今村 耕平",
   ),
   date: true,
-  titlepage: false,
+  titlepage: true,
 )
 
 = 目的
