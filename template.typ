@@ -110,6 +110,7 @@
     numbering: "(1)",
   )
 
+
   let set_author(ver) = {
     if ver == 1 {
       pad(
@@ -214,37 +215,20 @@
   // Set paragraph spacing.
   // body
   show par: set block(
-    above: 1.25em,
-    below: 1em,
+    above: 0.5em,
+    below: 0.5em,
     spacing: 1em
   )
   
 
   // Set heading styles.
   set heading(numbering: "1.1 ")
-  show heading.where(level: 1): set text(
-    weight: 630,
-  )
-  show heading.where(level: 1): set block(
-    above: 2em,
-  )
 
-  show heading.where(level: 2): set text(
-    weight: 600,
-  )
-  show heading.where(level: 2): set block(
-    above: 1.25em,
-  )
-
-  show heading.where(level: 3): set text(
-    weight: 600,
-  )
-
-  // 改行時の行間を調整する
-  // show parbreak : {
-  // h(1em)
-  // } // バグが多いので使えない
-  // noindentの関数を作る
+  set par(first-line-indent: 1em)
+  show heading: it => {
+    it
+    par(text(size: 0pt, ""))
+  }
 
   body
 
