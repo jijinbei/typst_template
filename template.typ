@@ -84,13 +84,13 @@
   )
 
   set figure(supplement: it => {
-  if it.func() == table {
-    "表"
-  } else if it.func() == image {
-    "図"
-  } else {
-    "図" // どうしよ
-  }}
+    if it.func() == table {
+      "表"
+    } else if it.func() == image {
+      "図"
+    } else {
+      "図" // どうしよ
+    }}
   )
 
   // Spacing between Japanese and English text
@@ -217,13 +217,30 @@
   show par: set block(
     above: 0.5em,
     below: 0.5em,
-    spacing: 1em
   )
-  
+
+  show math.equation: set block(
+    above: 1.5em,
+    below: 1.5em,
+  )
+
+  show figure: set block(
+    above: 1em,
+    below: 1.5em,
+  )
 
   // Set heading styles.
   set heading(numbering: "1.1 ")
-
+  show heading.where(level: 1): set text(
+    weight: 630,
+  )
+  show heading.where(level: 2): set text(
+    weight: 600,
+  )
+  show heading.where(level: 3): set text(
+    weight: 600,
+  )
+  
   set par(first-line-indent: 1em)
   show heading: it => {
     it
