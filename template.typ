@@ -5,7 +5,6 @@
   let headings = query(heading, loc)
   let toc = ()
 
-  // remove the heading for the outline
   let _ = headings.remove(0)
 
   for h in headings {
@@ -46,6 +45,35 @@
   stack(dir: ttb, ..toc)
 })
 
+#let set_date(is_date, fontsize) = {
+  if is_date == true {
+    align(
+      center, 
+      text(
+        size: fontsize, 
+        datetime.today().display("[year]年[month]月[day]日")
+      )
+    )
+  } 
+}
+
+#let set_author(authors, fontsize) = {
+  pad(
+    top: 1em,
+    bottom: 0em,
+    left: 4em,
+    right: 4em,
+    grid(
+      columns: (1fr,) * calc.min(2, authors.len()),
+      gutter: 1%,
+      ..authors.map(author => 
+      align(
+        center, 
+        text(size: fontsize, author)
+      )),
+    ),
+  )
+}
 
 #let project(
   title: "",
@@ -63,7 +91,6 @@
 
   let math_font = ("Latin Modern Math")
 
-  // Set the document's basic properties.
   set document(author: authors, title: title)
   
   set page(
@@ -93,6 +120,44 @@
     }}
   )
 
+  show math.equation: set text(
+    weight: 400,
+    font: math_font,
+  )
+
+  set math.equation(
+    supplement: "式",
+    numbering: "(1)",
+  )
+
+  // Start of document
+  if titlepage == true {
+    v(0.4fr)
+    align(center)[
+      #block(
+        text(size: 2.5em, weight: 600, title)
+      )
+    ]
+    v(0.05fr)
+    set_author(authors, 1.6em)
+    v(0.05fr)
+    set_date(date, 1.4em)
+    v(0.6fr)
+    pagebreak()
+
+    custom_outline()
+    pagebreak()
+  } else {
+    // Title
+    align(center)[
+      #block(
+        text(size: 2.0em, weight: 600, title)
+      )
+    ]
+    set_author(authors, 1.5em)
+    set_date(date, 1.4em)
+  }
+
   // Spacing between Japanese and English text
   show regex(
     "[\\P{latin}&&[[:^ascii:]]][\\p{latin}[[:ascii:]]]|[\\p{latin}[[:ascii:]]][\\P{latin}&&[[:^ascii:]]]"
@@ -101,128 +166,29 @@
     a.captures.at(0)+h(0.25em)+a.captures.at(1)
   }
 
-  show math.equation: set text(
-    weight: 400,
-    font: math_font,
-    )
-  set math.equation(
-    supplement: "式",
-    numbering: "(1)",
-  )
-
-
-  let set_author(ver) = {
-    if ver == 1 {
-      pad(
-        top: 1em,
-        bottom: 0em,
-        left: 4em,
-        right: 4em,
-        grid(
-          columns: (1fr,) * calc.min(2, authors.len()),
-          gutter: 1%,
-          ..authors.map(author => 
-          align(
-            center, 
-            text(size: 1.3em, author)
-          )),
-        ),
-      )
-    } else if ver == 2 {
-      v(0.05fr)
-      pad(
-        top: 1em,
-        bottom: 0em,
-        left: 4em,
-        right: 4em,
-        grid(
-          columns: (1fr,) * calc.min(1, authors.len()),
-          gutter: 1%,
-          ..authors.map(author => 
-          align(
-            center, 
-            text(size: 1.5em, author)
-          )),
-        ),
-      )
-      v(0.05fr)
-    }
-  }
-
-  let set_date(date, ver) = {
-    if date == true {
-      if ver == 1 {
-        align(
-          center, 
-          text(
-            size: 1.2em, 
-            datetime.today().display("[year]年[month]月[day]日")
-          )
-        )
-      } else if ver == 2 {
-        align(
-          center, 
-          text(
-            size: 1.4em, 
-            datetime.today().display("[year]年[month]月[day]日")
-          )
-        )
-      }
-    } 
-  }
-
-  // Start of document
-  if titlepage == true {
-    // Title
-    v(0.4fr)
-    align(center)[
-      #block(
-        text(size: 2.5em, weight: 600, title)
-      )
-    ]
-
-    // Author
-    set_author(2)
-
-    // Date
-    set_date(date, 2)
-
-    v(0.6fr)
-    
-    pagebreak()
-
-    // Table of contents.
-    custom_outline()
-    pagebreak()
-  
-  } else { // if set_titlepage == false
-    // Title
-    align(center)[
-      #block(
-        text(size: 2.0em, weight: 600, title)
-      )
-    ]
-
-    set_author(1)
-    set_date(date, 1)
-  }
-
-  set par(
-    // first-line-indent: 1em,
-    justify: true,
-    leading: 0.95em,
-  )
-  // Set paragraph spacing.
-  // body
   show par: set block(
     above: 0.5em,
-    below: 0.5em,
+    below: 1em,
   )
 
   show math.equation: set block(
     above: 1.5em,
     below: 1.5em,
   )
+
+  show heading: set block(
+    above: 0.5em,
+    below: 0.5em,
+  )
+
+  show enum: set block(
+    above: 1em,
+    below: 1em,
+  )
+  
+  show math.equation: it => {
+    h(0.2em) + it + h(0.2em)
+  }
 
   show figure: set block(
     above: 1em,
@@ -240,8 +206,14 @@
   show heading.where(level: 3): set text(
     weight: 600,
   )
-  
-  set par(first-line-indent: 1em)
+
+  // Set 字下げ
+  set par(
+    first-line-indent: 1em,
+    justify: true,
+    leading: 0.95em,
+  )
+
   show heading: it => {
     it
     par(text(size: 0pt, ""))
@@ -332,30 +304,3 @@
     )
   }
 }
-
-
-// box
-#let cbox(title,txt) = showybox(
-  title-style: (
-    weight: 800,
-    color: red.darken(15%),
-    sep-thickness: 0pt,
-    align: center
-  ),
-  frame: (
-    title-color: red.lighten(80%),
-    border-color: red.darken(30%),
-    thickness: (left: 1pt),
-    radius: 2pt
-  ),
-  title: title,
-)[
-  #txt
-]
-
-#let LaTeX = text(
-  font: "Latin Modern Roman", 
-  [
-    L#h(-0.35em)#text(size: 0.725em, baseline: -0.25em)[A]#h(-0.125em)T#h(-0.175em)#text(baseline: 0.225em)[E]#h(-0.125em)X
-  ]
-)
