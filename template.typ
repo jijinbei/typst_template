@@ -182,10 +182,15 @@
   )
 
   show enum: set block(
-    above: 1em,
-    below: 1em,
+    above: 1.05em,
+    below: 1.05em,
   )
-  
+
+  show list: set block(
+    above: 1.05em,
+    below: 1.05em,
+  )
+
   show math.equation: it => {
     h(0.2em) + it + h(0.2em)
   }
@@ -197,21 +202,15 @@
 
   // Set heading styles.
   set heading(numbering: "1.1 ")
-  show heading.where(level: 1): set text(
-    weight: 630,
-  )
-  show heading.where(level: 2): set text(
-    weight: 600,
-  )
-  show heading.where(level: 3): set text(
-    weight: 600,
+  show heading: set text(
+    weight: 640,
   )
 
   // Set 字下げ
   set par(
     first-line-indent: 1em,
     justify: true,
-    leading: 0.95em,
+    leading: 1em,
   )
 
   show heading: it => {
