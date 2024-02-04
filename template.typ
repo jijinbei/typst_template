@@ -156,6 +156,7 @@
     ]
     set_author(authors, 1.5em)
     set_date(date, 1.4em)
+    h(4em)
   }
 
   // Spacing between Japanese and English text
