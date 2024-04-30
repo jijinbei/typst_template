@@ -4,8 +4,12 @@
 #let HEADING_SIZE = 18pt
 #let BODY_SIZE = 13pt
 
+// paper size (default: A4)
+#let WIDTH = 210mm
+#let HEIGHT = 297mm
+
 #let conf(title: [], cols: 2, doc) = {
-  set page(paper: "a4", margin: 8mm)
+  set page(width: WIDTH, height: HEIGHT, margin: 8mm)
    
   // title
   box(
@@ -24,6 +28,8 @@
    
   // body
   set text(font: "Kosugi Maru", size: BODY_SIZE)
+  set par(justify: true)
+   
   // heading
   show heading: it => {
     block(
@@ -48,9 +54,9 @@
 #let caution(doc) = {
   box(fill: black.lighten(80%), width: 100%, inset: 6pt, radius: 4pt, grid(
     columns: (5%, 95%),
-    gutter: 3%,
+    gutter: 1%,
     image("icon\caution_mark.svg"),
-    box(inset: 2pt, text(size: 12pt, doc)),
+    block(inset: (x: 7pt, y: 3pt), text(size: 12pt, doc)),
   ))
 }
 
@@ -68,11 +74,10 @@
     ),
     block(inset: 6pt, outset: 1pt, above: 15pt, radius: 2pt, text(size: 13pt, Q)),
   )
-
+   
   grid(
     columns: (10%, 90%),
     gutter: 3%,
-    
     block(
       width: 30pt,
       height: 30pt,
