@@ -1,7 +1,8 @@
 // Settings
 #let TITLE_HEIGHT = 22mm
 #let TITLE_SIZE = 36pt
-#let HEADING_SIZE = 18pt
+#let HEADING1_SIZE = 18pt
+#let HEADING2_SIZE = 14pt
 #let BODY_SIZE = 13pt
 
 // paper size (default: A4)
@@ -32,21 +33,32 @@
    
   // heading
   show heading: it => {
-    block(
-      stroke: black,
-      width: 100%,
-      inset: 6pt,
-      outset: 1pt,
-      above: 15pt,
-      radius: 2pt,
-      text(size: HEADING_SIZE, weight: 600, it),
-    )
+    if it.level == 1 {
+      block(
+        stroke: black,
+        width: 100%,
+        inset: 6pt,
+        outset: 1pt,
+        above: 15pt,
+        radius: 2pt,
+        text(size: HEADING1_SIZE, weight: 600, it),
+      )
+    } else {
+      block(
+        width: 100%,
+        below: 13pt,
+        stroke: (bottom: 1pt + black),
+        inset: (bottom: 0.2em),
+        it,
+      )
+    }
   }
    
   set enum(numbering: (..nums) => text(font: "Noto Sans JP", weight: 800, nums
   .pos()
   .map(str)
   .join(".") + "."))
+  
   // body
   columns(cols, doc)
 }
@@ -85,5 +97,17 @@
       align(center + horizon, text(fill: white, size: 18pt, weight: 800, "A")),
     ),
     block(inset: 6pt, outset: 1pt, above: 15pt, radius: 2pt, text(size: 13pt, A)),
+  )
+}
+
+#let encloseText(doc) = {
+  block(
+    stroke: black,
+    inset: 6pt,
+    outset: 1pt,
+    above: 14pt,
+    below: 14pt,
+    radius: 2pt,
+    text(size: 13pt, doc),
   )
 }
